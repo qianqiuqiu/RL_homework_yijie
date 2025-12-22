@@ -1,0 +1,27 @@
+class GridWorld:
+    def __init__(self, grid_size, special_cells=None):
+        self.grid_size = grid_size
+        self.special_cells = special_cells if special_cells else {}
+        self.num_states = grid_size[0] * grid_size[1]
+        self.actions = ['up', 'down', 'left', 'right']
+
+    def get_state_id(self, r, c):
+        return r * self.grid_size[1] + c
+
+    def get_coords(self, state_id):
+        return divmod(state_id, self.grid_size[1])
+
+    def get_transition_model(self, state_id, action_idx):
+        r, c = self.get_coords(state_id)
+        if action_idx == 0:  # 上
+            r = max(0, r - 1)
+        elif action_idx == 1:  # 下
+            r = min(self.grid_size[0] - 1, r + 1)
+        elif action_idx == 2:  # 左
+            c = max(0, c - 1)
+        elif action_idx == 3:  # 右
+            c = min(self.grid_size[1] - 1, c + 1)
+        return self.get_state_id(r, c)
+
+    def get_initial_policy(self):
+        return [0] * self.num_states  # 初始策略：所有状态均为“上”
